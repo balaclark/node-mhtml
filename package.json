@@ -1,0 +1,37 @@
+{
+  "name": "mhtml",
+  "version": "0.0.1",
+  "description": "Convert MHTML files to HTML.",
+  "main": "mhtml.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "tba"
+  },
+  "keywords": [
+    "convert",
+    "mhtml",
+    "mhtml"
+  ],
+  "author": "Bala Clark <balaclark@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "mimelib": "~0.2.14",
+    "mkdirp": "~0.3.5",
+    "cheerio": "~0.12.4",
+    "commander": "~2.0.0",
+    "glob": "~3.2.7",
+    "rimraf": "~2.2.2"
+  },
+  "devDependencies": {
+    "mocha": "~1.14.0",
+    "should": "~2.1.0",
+    "fs-extra": "~0.8.1",
+    "istanbul": "~0.1.45"
+  }
+}

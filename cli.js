@@ -1,0 +1,43 @@
+'use strict';
+
+var fs = require('fs');
+var path = require('path');
+var program = require('commander');
+var glob = require('glob');
+var mhtml = require(__dirname + '/mhtml');
+
+program
+  .version(require(__dirname + '/package').version)
+  .option('-e, --extract [value]', 'Extract MTHML archive / folder of MHTML archives')
+  .option('-o, --output [value]', 'Output destination (defaults to same folder as the source file)')
+  .option('-f, --force', 'Delete the existing output folder before extracting')
+  // .option('-v, --verbose', 'Verbose mode')
+  .parse(process.argv);
+
+function getdir(file, base) {
+  return path.join(base || path.dirname(file), path.basename(file, path.extname(file)));
+}
+
+if (program.extract) {
+
+  var output = program.output || getdir(program.extract);
+
+  fs.stat(program.extract, function (err, stats) {
+
+    if (stats.isDirectory()) {
+
+      glob(path.join(program.extract, '*.{mht,mhtml}'), function (err, files) {
+        files.forEach(function (file) {
+          mhtml.extract(file, getdir(file, program.output), function (err) {
+            if (err) console.error(err);
+          }, program.force);
+        });
+      });
+
+    } else {
+      mhtml.extract(program.extract, output, function (err) {
+        if (err) console.error(err);
+      }, program.force);
+    }
+  });
+}
