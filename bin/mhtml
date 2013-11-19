@@ -1,13 +1,13 @@
-'use strict';
+#!/usr/bin/env node
 
 var fs = require('fs');
 var path = require('path');
 var program = require('commander');
 var glob = require('glob');
-var mhtml = require(__dirname + '/mhtml');
+var mhtml = require(__dirname + '/../mhtml');
 
 program
-  .version(require(__dirname + '/package').version)
+  .version(require(__dirname + '/../package').version)
   .option('-e, --extract [value]', 'Extract MTHML archive / folder of MHTML archives')
   .option('-o, --output [value]', 'Output destination (defaults to same folder as the source file)')
   .option('-f, --force', 'Delete the existing output folder before extracting')

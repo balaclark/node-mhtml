@@ -6,6 +6,9 @@
   "directories": {
     "example": "example"
   },
+  "bin": {
+    "mhtml": "./bin/mhtml"
+  },
   "scripts": {
     "test": "make test"
   },
