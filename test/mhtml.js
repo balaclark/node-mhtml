@@ -55,6 +55,17 @@ describe('Extraction', function () {
       done();
     }, true);
   });
+
+  it('should auto-name parts that have no Content-Location', function (done) {
+    mhtml.extract(sources + 'example3.mhtml', tmpdir, function (err) {
+      var extracted = fs.readdirSync(tmpdir);
+      extracted.should.have.length(4);
+      extracted.forEach(function (file) {
+        file.should.match(/^\d+\.(css|jpg|html)$/)
+      });
+      done();
+    });
+  });
 });
 
 describe('Errors', function () {
