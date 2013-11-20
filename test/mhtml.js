@@ -56,6 +56,17 @@ describe('Extraction', function () {
     }, true);
   });
 
+  it('should convert internal links / srcs to be relative', function (done) {
+    mhtml.extract(sources + 'example1.mhtml', tmpdir, function (err) {
+      var html = fs.readFileSync(tmpdir + 'example.html', 'utf8');
+      html.should.include('<a href="http://example.org/">Example External Link</a>', 'External links should be left alone');
+      html.should.include('<img src="http://example.org/example.jpg" alt="Example External Image">', 'External images should be left alone');
+      html.should.include('<a href="bench.jpg"><img src="bench.jpg" alt="bench"></a>', 'The internal link and image src should have been converted')
+      html.should.not.include('file:/', 'No absolute file paths please')
+      done();
+    });
+  });
+
   it('should auto-name parts that have no Content-Location', function (done) {
     mhtml.extract(sources + 'example3.mhtml', tmpdir, function (err) {
       var extracted = fs.readdirSync(tmpdir);
