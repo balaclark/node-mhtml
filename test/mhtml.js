@@ -6,15 +6,15 @@ var mhtml = require(__dirname + '/../mhtml');
 var sources = __dirname + '/examples/';
 var tmpdir = __dirname + '/tmp/';
 
+beforeEach(function (done) {
+  fs.mkdirs(tmpdir, done);
+});
+
+afterEach(function (done) {
+  fs.remove(tmpdir, done);
+});
+
 describe('Extraction', function () {
-
-  beforeEach(function (done) {
-    fs.mkdirs(tmpdir, done);
-  });
-
-  afterEach(function (done) {
-    fs.remove(tmpdir, done);
-  });
 
   it('should extract a single file', function (done) {
     mhtml.extract(sources + 'example1.mhtml', tmpdir, function (err) {
@@ -54,5 +54,16 @@ describe('Extraction', function () {
       extracted.should.eql(['bench.jpg','example.css','example.html','example.jpg','flower.jpg','good-example.jpg']);
       done();
     }, true);
+  });
+});
+
+describe('Errors', function () {
+
+  it('should complain if an invalid file is given', function (done) {
+    mhtml.extract(sources + 'foo.txt', tmpdir, function (err) {
+      err.should.be.and.instanceOf(Error).and.have.property('message', 'Invalid MHTML file');
+      fs.readdirSync(tmpdir).should.be.empty;
+      done();
+    })
   });
 });
