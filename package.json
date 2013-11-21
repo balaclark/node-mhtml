@@ -1,6 +1,6 @@
 {
   "name": "mhtml",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Convert MHTML files to HTML.",
   "main": "mhtml.js",
   "directories": {
