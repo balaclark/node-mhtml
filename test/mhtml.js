@@ -18,8 +18,10 @@ describe('Extraction', function () {
 
   it('should extract a single file', function (done) {
     mhtml.extract(sources + 'example1.mhtml', tmpdir, function (err) {
-      var extracted = fs.readdirSync(tmpdir);
-      extracted.should.eql(['bench.jpg','example.css','example.html','example.jpg','flower.jpg','good-example.jpg']);
+      var extracted1 = fs.readdirSync(tmpdir);
+      var extracted2 = fs.readdirSync(tmpdir + 'img');
+      extracted1.should.eql(['example.css', 'example.html', 'img']);
+      extracted2.should.eql(['bench.jpg', 'flower.jpg', 'good-example.jpg']);
       done();
     });
   });
@@ -27,9 +29,11 @@ describe('Extraction', function () {
   it('should create any non-existing output folders', function (done) {
     mhtml.extract(sources + 'example1.mhtml', tmpdir + 'one/two/three', function (err) {
       var basedir = fs.readdirSync(tmpdir);
-      var outputdir = fs.readdirSync(tmpdir + 'one/two/three');
+      var outputdir1 = fs.readdirSync(tmpdir + 'one/two/three');
+      var outputdir2 = fs.readdirSync(tmpdir + 'one/two/three/img');
       basedir.should.eql(['one']);
-      outputdir.should.eql(['bench.jpg','example.css','example.html','example.jpg','flower.jpg','good-example.jpg']);
+      outputdir1.should.eql(['example.css', 'example.html', 'img']);
+      outputdir2.should.eql(['bench.jpg', 'flower.jpg', 'good-example.jpg']);
       done();
     });
   });
@@ -39,8 +43,10 @@ describe('Extraction', function () {
     fs.copySync(sources + 'foo.txt', tmpdir + 'foo.txt');
 
     mhtml.extract(sources + 'example1.mhtml', tmpdir, function (err) {
-      var extracted = fs.readdirSync(tmpdir);
-      extracted.should.eql(['bench.jpg','example.css','example.html','example.jpg','flower.jpg','foo.txt','good-example.jpg']);
+      var extracted1 = fs.readdirSync(tmpdir);
+      var extracted2 = fs.readdirSync(tmpdir + 'img');
+      extracted1.should.eql(['example.css', 'example.html', 'foo.txt', 'img']);
+      extracted2.should.eql(['bench.jpg', 'flower.jpg', 'good-example.jpg']);
       done();
     });
   });
@@ -50,8 +56,10 @@ describe('Extraction', function () {
     fs.copySync(sources + 'foo.txt', tmpdir + 'foo.txt');
 
     mhtml.extract(sources + 'example1.mhtml', tmpdir, function (err) {
-      var extracted = fs.readdirSync(tmpdir);
-      extracted.should.eql(['bench.jpg','example.css','example.html','example.jpg','flower.jpg','good-example.jpg']);
+      var extracted1 = fs.readdirSync(tmpdir);
+      var extracted2 = fs.readdirSync(tmpdir + 'img');
+      extracted1.should.eql(['example.css', 'example.html', 'img']);
+      extracted2.should.eql(['bench.jpg', 'flower.jpg', 'good-example.jpg']);
       done();
     }, true);
   });
@@ -61,7 +69,7 @@ describe('Extraction', function () {
       var html = fs.readFileSync(tmpdir + 'example.html', 'utf8');
       html.should.include('<a href="http://example.org/">Example External Link</a>', 'External links should be left alone');
       html.should.include('<img src="http://example.org/example.jpg" alt="Example External Image">', 'External images should be left alone');
-      html.should.include('<a href="bench.jpg"><img src="bench.jpg" alt="bench"></a>', 'The internal link and image src should have been converted')
+      html.should.include('<a href="img/bench.jpg"><img src="img/bench.jpg" alt="bench"></a>', 'The internal link and image src should have been converted')
       html.should.not.include('file:/', 'No absolute file paths please')
       done();
     });
@@ -75,6 +83,51 @@ describe('Extraction', function () {
         file.should.match(/^\d+\.(css|jpg|html)$/)
       });
       done();
+    });
+  });
+
+  describe('Office 2010 Support', function () {
+
+    it('Word', function (done) {
+      mhtml.extract(sources + 'office2010/word.mht', tmpdir, function (err) {
+        var extracted1 = fs.readdirSync(tmpdir);
+        var extracted2 = fs.readdirSync(tmpdir + 'word_files');
+        extracted1.should.eql(['word.htm', 'word_files']);
+        extracted2.should.eql([
+          'colorschememapping.xml',
+          'filelist.xml',
+          'image001.png',
+          'image002.png',
+          'image003.png',
+          'image004.png',
+          'oledata.mso',
+          'themedata.thmx'
+        ]);
+        done();
+      });
+    });
+
+    it('Excel', function (done) {
+      mhtml.extract(sources + 'office2010/excel.mht', tmpdir, function (err) {
+        var extracted1 = fs.readdirSync(tmpdir);
+        var extracted2 = fs.readdirSync(tmpdir + 'excel_files');
+        var tabstrip = fs.readFileSync(tmpdir + 'excel_files/tabstrip.htm', 'utf8');
+        extracted1.should.eql(['excel.htm', 'excel_files']);
+        extracted2.should.eql([
+          'filelist.xml',
+          'image001.png',
+          'image002.png',
+          'image003.png',
+          'image004.png',
+          'sheet001.htm',
+          'sheet002.htm',
+          'sheet003.htm',
+          'stylesheet.css',
+          'tabstrip.htm'
+        ]);
+        tabstrip.should.not.match(/<base/, 'The <base> tag should have been stripped');
+        done();
+      });
     });
   });
 });
