@@ -5,37 +5,59 @@ var path = require('path');
 var program = require('commander');
 var glob = require('glob');
 var mhtml = require(__dirname + '/../mhtml');
+var extract, output;
 
 program
   .version(require(__dirname + '/../package').version)
+  .usage('[OPTIONS] [FILE] [OUTPUT]')
   .option('-e, --extract [value]', 'Extract MTHML archive / folder of MHTML archives')
   .option('-o, --output [value]', 'Output destination (defaults to same folder as the source file)')
   .option('-f, --force', 'Delete the existing output folder before extracting')
-  // .option('-v, --verbose', 'Verbose mode')
-  .parse(process.argv);
+  .option('-v, --verbose', 'Verbose mode');
+
+program.on('--help', function () {
+  console.log('  Examples:');
+  console.log('');
+  console.log('    $ mhtml archive.mhtml         | Creates a new directory "archive" containing the extracted mhtml files.');
+  console.log('    $ mhtml archive.mhtml output  | Extracts archive.mhtml to the directory "output"');
+  console.log('    $ mhtml archives              | Extracts all mhtml archives contained inside the folder "archives"');
+  console.log('    $ mhtml archives output       | Extracts all mhtml archives contained inside the folder "archives" to the folder "output"');
+  console.log('');
+});
+
+program.parse(process.argv);
+
+extract = program.extract || program.args[0];
+output = program.output || program.args[1];
 
 function getdir(file, base) {
   return path.join(base || path.dirname(file), path.basename(file, path.extname(file)));
 }
 
-if (program.extract) {
+function log(source, output) {
+  if (program.verbose) console.log(source + ' -> ' + output);
+}
 
-  var output = program.output || getdir(program.extract);
+if (extract) {
 
-  fs.stat(program.extract, function (err, stats) {
+  output = output || getdir(extract);
+
+  fs.stat(extract, function stat(err, stats) {
 
     if (stats.isDirectory()) {
 
-      glob(path.join(program.extract, '*.{mht,mhtml}'), function (err, files) {
+      glob(path.join(extract, '*.{mht,mhtml}'), function glob(err, files) {
         files.forEach(function (file) {
-          mhtml.extract(file, getdir(file, program.output), function (err) {
+          log(file, output);
+          mhtml.extract(file, getdir(file, output), function extract(err) {
             if (err) console.error(err);
           }, program.force);
         });
       });
 
     } else {
-      mhtml.extract(program.extract, output, function (err) {
+      log(extract, output);
+      mhtml.extract(extract, output, function extract(err) {
         if (err) console.error(err);
       }, program.force);
     }
