@@ -3,15 +3,39 @@ MHTML
 
 Extract MHTML files to HTML.
 
-TODO
-----
+Usage
+-----
 
-  * make callbacks optional
-  * return more errors where possible
-  * test with many different mhtml files
-  * allow mhtml files to be created from a folder
-  * fully support spec: http://www.ietf.org/rfc/rfc2110.txt
-  * convert to PDF
+### Command Line
+
+Basic extract.
+```sh
+mhtml archive.mhtml
+```
+
+Extract to a different directory.
+```sh
+mhtml archive.mhtml output
+```
+
+Extracts all mhtml archives contained inside a folder.
+```sh
+mhtml archives
+```
+
+Get more usage instructions and examples.
+```sh
+mhtml --help
+```
+
+### Library
+
+```js
+var mhtml = require('/mhtml');
+mhtml.extract('path/to/file.mhtml', 'path/to/destination', function (err) {
+  console.log(done);
+});
+```
 
 Example images ©
 ----------------
