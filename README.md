@@ -1,6 +1,8 @@
 MHTML
 -----
 
+[![Build Status](https://api.travis-ci.org/balaclark/node-mhtml.png)](https://travis-ci.org/balaclark/node-mhtml)
+
 Extract MHTML files to HTML.
 
 Usage
