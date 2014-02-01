@@ -2,6 +2,7 @@ MHTML
 -----
 
 [![Build Status](https://api.travis-ci.org/balaclark/node-mhtml.png)](https://travis-ci.org/balaclark/node-mhtml)
+[![Coverage Status](https://coveralls.io/repos/balaclark/node-mhtml/badge.png)](https://coveralls.io/r/balaclark/node-mhtml)
 
 Extract MHTML files to HTML.
 
