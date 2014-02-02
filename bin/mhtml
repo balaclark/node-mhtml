@@ -27,9 +27,6 @@ program.on('--help', function () {
 
 program.parse(process.argv);
 
-extract = program.extract || program.args[0];
-output = program.output || program.args[1];
-
 function getdir(file, base) {
   return path.join(base || path.dirname(file), path.basename(file, path.extname(file)));
 }
@@ -37,6 +34,13 @@ function getdir(file, base) {
 function log(source, output) {
   if (program.verbose) console.log(source + ' -> ' + output);
 }
+
+if (!program.args.length) {
+  program.outputHelp();
+}
+
+extract = program.extract || program.args[0];
+output = program.output || program.args[1];
 
 if (extract) {
 
