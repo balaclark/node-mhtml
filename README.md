@@ -36,7 +36,7 @@ mhtml --help
 ```js
 var mhtml = require('/mhtml');
 mhtml.extract('path/to/file.mhtml', 'path/to/destination', function (err) {
-  console.log(done);
+  console.log('done.');
 });
 ```
 
